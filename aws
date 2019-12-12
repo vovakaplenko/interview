@@ -1,0 +1,812 @@
+AWS Experience:
+
+1) What are the projects you worked and what are your responsibilities?
+
+Definately, i have been working on various projects in the 
+
+1) I have helped developers by setting up the infrastructure in the AWS dev and QA accounts so that the developers can run their application using the architecture.
+2) Have set up the ec2 instances. (linux, windows) 
+3) I have used the cloud-formation to convert the infrastructure in to service and deploy it in which ever environment I want by just launching the stack.
+4) I was also responsible for scaling up the infrastructure using auto scaling groups and elastic load balancer and launch configurations
+5) Doing some of the DNS management using route 53 for the DNS 
+6) created s3 buckets for the storage which is the most reliable and elastic storage.. have played around with s3 buckets in many areas... like 
+                -versioning.
+                -events.
+                -static website setups using the cloud-front. (Good option to setup the UI in a secure manner by only allowing the cloud-front to access the s3 bucket)
+                -using the bucket policies and acls.
+                -setting up the life cycle policies.
+                -Using the versioning and the life cycle policies in tandem to get the best redundancy and availability at teh cheapest possible cost.
+7) Have set up the load balancers (Classic, application and networking) based on the use-case so that the traffic coming from the route 53 can be distributed among the servers so that whole load is not taken by one server.
+8) Used Route 53 for setting up the hosted zones and the record sets so that the traffic from the user is reached to the specific service in the aws account.
+                Played around with:
+                -failing over.
+                -weighted routing.
+                -creating health checks to the applications.
+                -creating inter account dependencies on the dns.
+				
+9) Have set up the networking for the application running in the ec2 instances. Including the sub-netting and VPC creation.
+10) Used IAM to setup the users, groups, roles, policies and made use of the AWS managed policies, created custom managed policies, used IAM to create roles that give permissions to the lambda and ec2.
+11) Integration of SAS services like simple emailing service, simple notification service.
+12) Used RDS for the database purposes and created the multiple-AZ RDS and the read replicas for the availability and redundancy
+13) Creating DNS zones, in that using the failour routing in the route 53 for the routing of the applications and this was across multiple regions using availability zones as well to make it highly available.
+14) talking to various stake holders understandign their requirements and then trying to do automatic deployments using jenkins, cloud formation template.
+15) I will also be using eleastic beanstalk, relational database services, elastic cache and also some of the other things like make it more reliable, more robust and avoiding single points of failure in this case.
+16) Worked with the lambda functions setting up the server-less infrastructure facilitating developers so that they can run the code with out worrying about the servers.
+17) Created API gateways so that the lambda functions can be invoked in a secure manner(not exposing them to the open internet). This included creating API keys to call the methods and created usage plans, custom domains so that the endpoints that we use are not that complicated.
+
+2) what tools did you use to deploy in AWS infrastructure?
+
+So Basically we will be using terraform and cloud formation templates and then we will be deploying the applications using center infrastructure like virtual private cloudand the various kinds of provisioning on top of that we will be done using the templates.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Cloud Formation:
+
+1) Have you ever worked on ANS/cloud formation template in AWS ?
+
+yes, I have return the various kinds of cloudformation templates and also i have worked on the development of the cloud formation templates and then provistioning the eleastic compute cloud has left the virtual proivate cloud and i have used it for the various
+kinds of automated deployment to the target machine and you know the during cloud formation for creating an environment for development and as well as various other teams. I would like to say so definitely about experience of using cloudformation templates for the various stakeholders 
+so that we can actually do the integrations in this case i have written the mappings is the property files and also defined the various outputs and resources inside that, so that we can go ahead and do the various integration with jenkins for the provisining of the
+infrastructure in the real time.
+
+2) Intiate Two EC2 instances using cloud formation template/CNS template ?
+
+"EC2 Instance" : {
+           "Type" :"AWS::EC2::Instance"
+		   "Properties" : {
+		   "ImageId" : { "Fn::FindInMap" : ["AWSRegionArch2AMI", {"Ref" : "AWS::Region"}, "Fn::FindInMap" : ["AWSRegionType2Arch", {"Ref" : "InstanceType"}, "Arch"]}]},
+		   "KeyName" : {"Ref" : "KeyName"},
+		   "InstanceType" : {"Ref" : "InstanceType"},
+		   "SecurityGroups" : [{"Ref" : "Ec2SecurityGroup"}],
+		   "BlockDeviceMappings" : [{"DeviceName" : "/dev/sda1", "EBS" : {"VolumeSize" : "50"}}, {"DeviceName" : "/dev/sdm1", "EBS" : {"VolumeSize" : "100"}}
+
+3) What is the difference between cloudformation and terraform?
+
+the main difference is terraform works across multiple cloud provider  and cloudformation works only with AWS.
+Terraform is having state management on the S3 buckets on the local file where as this missing on the cloud formation template.
+
+
+4) what are the intrinsic functions you have used in cloud formation template?
+
+We will be having various function references like 
+
+We have used split, select and join and some in built functions 
+
+5) Explain cloud formation template structure?
+
+CLOUDFORMATION TEMPLATE:
+It is required that CloudFormation follows a pre-defined AWS template. We must define resources in a manner so that AWS identifies these resources and dependencies between them, and create the required infrastructure.
+
+TEMPLATE STRUCTURE:
+An AWS CloudFormation template has six top-level sections, which must be defined in the order given below:
+
+AWSTemplateFormatVersion - optional, it takes a literal string value.If this section is missing, then AWS automatically takes the latest value defined for it.  
+Description - The description is a text line that describes your template.
+Metadata - Metadata is an optional section used to provide the details of the template like different resources, instances using, databases configuring 
+Parameters - Parameters is an optional section used to pass parameters to the template variables at runtime.
+Mappings - Mappings is an optional section used to define named-value pairs. For example, if we want to set a named-value pair by region name, then we can provide a mapping. Here the region name would be a key and provide a value for that key. 
+           Using this mapping, the user can choose their region to create the resources.
+Conditions - This section defines the conditions that will be used by the CloudFormation. It is like “If” in any programming language. We can combine multiple conditions with the COMMA(,) delimiter.
+Resources - Resources is a required section of any CloudFormation template. This section is used to define the resources that are required for our infrastructure. Resources like logicalID, Type, Properties...
+Output - This section is used to get output values from the CloudFormation engine, i.e. EC2 instance physical ID. The output will be shown on the CloudFormation console. 
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+1) What is cloud ?
+	All clouds are data center or multiple data centers made up of compute and storage resources connected by network
+
+	An infrastructure service for the world
+	Elastic computing
+	Storage in the cloud 
+	Security 
+	Pricing and availability
+	
+Regions and Availability Zones
+	The Cloud infrastructure is built around Regions and Availability Zones (“AZs”). A Region is a physical location in the world where we have multiple Availability Zones. Availability Zones consist of one or more discrete data centers, each with redundant power, networking and connectivity, housed in separate facilities. These Availability Zones offer you the ability to operate production applications and databases which are more highly available, fault tolerant and scalable than would be possible from a single data center
+
+	Supported AWS Services
+	Cost
+	Latency
+	Security & Compliance
+	Service Level Agreements
+
+2) Why do we need cloud ?
+
+	Trade capital expense for variable expense
+	Instead of having to invest heavily in data centers and servers before you know how you’re going to use them, you can only pay when you consume computing resources, and only pay for how much you consume.
+	
+	Benefit from massive economies of scale
+	By using cloud computing, you can achieve a lower variable cost than you can get on your own. Because usage from hundreds of thousands of customers are aggregated in the cloud, providers such as Amazon Web Services can achieve higher economies of scale which translates into lower pay as you go prices
+	
+	Stop guessing capacity
+	Eliminate guessing on your infrastructure capacity needs. When you make a capacity decision prior to deploying an application, you often either end up sitting on expensive idle resources or dealing with limited capacity. With cloud computing, these problems go away. You can access as much or as little as you need, and scale up and down as required with only a few minutes notice.
+
+	Increase speed and agility
+	In a cloud computing environment, new IT resources are only ever a click away, which means you reduce the time it takes to make those resources available to your developers from weeks to just minutes. This results in a dramatic increase in agility for the organization, since the cost and time it takes to experiment and develop is significantly lower.
+	
+	Stop spending money on running and maintaining data centers
+	Focus on projects that differentiate your business, not the infrastructure. Cloud computing lets you focus on your own customers, rather than on the heavy lifting of racking, stacking and powering servers.
+	
+	Go global in minutes
+	Easily deploy your application in multiple regions around the world with just a few clicks. This means you can provide a lower latency and better experience for your customers simply and at minimal cost.
+
+
+	
+3) What is Infrastructure as code?
+
+     Infrastucture as code is a phynomina which lets you to define the infrastructure in terms of code for various examples of infrastructure as a code as they are there so one of them is the cloud formation template and other is the terraform to both of the them
+     help you to write the various kinds of infrastructure as code and then you can let live in step by step to provision the infrastructure on the cloud.
+
+
+4) If want to create the machine in AWS cloud, can we use knife command?
+
+Yes, we can use the knife command and very much possible but this is not best practise because terraform is the better tool for create automation as well as orchestration. people will be using it only for the configuration management.
+
+Knife ec2 create 
+
+
+5) How does the connection happens to the cloud?
+
+Basically connection to the cloud happens by using Amazon cloud API and apart from that you will be having various kinds of amazon CLI which can talk to server.
+
+6) How does the docker machine created in amazon cloud?
+
+Basically docker machine is getting created, will actually have various kinds of docker images which are the elastic container registry and then we will be pulling that image from the remote elastic container registry and then we will be running the command called
+
+Docker run -ti ubuntu/centos
+
+We will also try to scale up the kubernetes as well as the docker swarm and it can be used for the production and various kinds stuff on top of that.
+
+7) How would you scale up by using auto scaling groups?
+
+Amazon EC2 Auto Scaling provides a number of ways to adjust scaling to best meet the needs of your applications. As a result, it's important that you have a good understanding of your application. Keep the following considerations in mind:
+
+i) What role should Amazon EC2 Auto Scaling play in your application's architecture? It's common to think about automatic scaling primarily as a way to increase and decrease capacity, but it's also useful for maintaining a steady number of servers.
+ii) What cost constraints are important to you? Because Amazon EC2 Auto Scaling uses EC2 instances, you only pay for the resources that you use. Knowing your cost constraints helps you decide when to scale your applications, and by how much.
+iii) What metrics are important to your application? Amazon CloudWatch supports a number of different metrics that you can use with your Auto Scaling group.
+
+Scaling options: Maintain current instance levels at all times, Manual scaling, Scale based on a schedule, Scale based on demand
+
+scaling configuration:
+
+Create or Select a Launch Configuration
+Create an Auto Scaling Group
+(Optional) Verify that Your Load Balancer is Attached to Your Auto Scaling Group
+
+For each environment - we can have a different Auto Scaling Group with different launch configuration.
+
+For Auto Sclaing Group - we configure as follows:
+In Dev - we use only 1 Subnet/availability zone in SF
+In SYS - We use 2 Subnets/Availability Zones in SF
+
+1st step is to create a Launch Configuration with specifics such as Choosing AMI, Choose Instance Type, Configure Details (IAM Role, BootStrap script, IP Address Type), Add Storage, Configure Security Groups, Review etc.
+2nd step is to create a AutoScaling group with No of instances, Subnet, ELB, HealthCheckType, etc.
+
+
+8) what services did you used in AWS to implement CI/CD using AWS?
+
+yes, we ill be using code commit, code build, code pipeline, code deploy.
+
+9) what is the purpose of AWS opsworks?
+
+AWS OpsWorks (Amazon Web Services OpsWorks) is a cloud computing service from Amazon Web Services (AWS) that manages infrastructure deployment for cloud administrators. The service automates deployment, configurations and operational tasks for distributed applications.
+
+10) 
+
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+VPC/SubNets:
+
+VPC: Amazon Virtual Private Cloud (Amazon VPC) enables you to launch AWS resources into a virtual network that you've defined. This virtual network closely resembles a traditional network that you'd operate in your own data center, 
+with the benefits of using the scalable infrastructure of AWS.
+
+
+
+
+1) What is VPC endpoint?
+
+A VPC endpoint enables you to create a private connection between your VPC and another AWS service without requiring access over the Internet, through a NAT device, a VPN connection, or AWS Direct Connect. Endpoints are virtual devices.
+There are two types of VPC endpoints: 
+interface endpoints -  An interface endpoint is an elastic network interface with a private IP address that serves as an entry point for traffic destined to a supported service. (CLOUDFORMATION, cloudwatch, API gateway, SNS, SOS, EC2 API...)
+gateway endpoints -  A gateway endpoint is a gateway that is a target for a specified route in your route table, used for traffic destined to a supported AWS service. (S3, DynamoDB)
+
+2) Have you ever implemented multi subnets or multi vpc for your application?
+
+3) I have 10 EC2, 3 DB, 3 middle, 5 frontend servers, - middle and db servers on private subnet and webservers are public subnet exposed through load balancer. now, i want application to use seasonal manner like end of quarter, i want to bring down the application
+    begining of the quarter (3months) and 10 days before quarter ends,  i want to bring up the application. When i bring down the servers, the ips will go away and when bring up the servers, will get new Ips..how you will make sure your application works with new IPs?
+	
+	i) Use Elastic IPs - Bring down the machines and hold the elastic ips and reuse them again but amazon will charge you for it.
+	ii) we can use the script  which will map the new dynamic public IPs for the DNS host names
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+IAM:
+
+Enables you to manage access to AWS services and resources securely.. Using IAM you can create and manage AWS users and groups and use permissions to allow and deny their access to the AWS resources..
+
+1) what is the difference between IAM role and Instant profile?
+
+	An Instance Profile is a container for a single IAM Role. A typical convention is to create an IAM Role and an Instance Profile of the same name for clarity. 
+	An EC2 Instance cannot be assigned a Role directly, but it can be assigned an Instance Profile which contains a Role.
+
+	As an IAM user specifies a person, an instance profile specifies an EC2 instances. When you create an IAM Role for EC2 using the AWS Management Console, it creates both an EC2 instance profile as well as an IAM role.
+
+2) WHat is the otherway you can query temporary access key and secret key in AWS environment?
+
+	We can actually configure the temporary access key insude the Amazon, so you can actually create the secret key and secret access key and then you can create the policy and then once the policy created, you can send to instance profile which can used for the
+	various kinds of provisioning on top of that various deployments and make sure you are running the amount of policies to get give the access to various end users, so that they can utilize that for accessing amazon tools and technologies which can used on the
+	application on daily basis.
+
+3) There is an IAM user which comes with access key, secret key and then you have IAM role and instance profile. Is there any another way user wants to temporary create access key and secret key which automatically goes away?
+
+	yes, you can use the amazon STS API , security token service to create the provide produce access key and secret key.
+
+
+4) In multi subnet environments, what is the difference between network ACL and network security groups?
+
+	The difference between Security Group and ACLs is that, Security Group act as a firewall for associated Amazon EC2 instances, controlling both inbound and outbound traffic at the instance level, 
+	while ACLs act as a firewall for associated subnets, controlling both inbound and outbound traffic at the subnet level.
+
+	i) Network Access control lists are applicable at the subnet level, so any instance in the subnet with an associated NACL will follow rules of NACL. That's not the case with security groups, security groups has to be assigned explicitly to the instance.
+	ii) By default your default vpc, will have a default Network Access Control List which would allow all traffic , both inbound and outbound. If you want to restrict access at subnet level it's a good practice to create a custom NACL and edit it with the rules 
+    of your choice and while editing you could also edit subnet associations , where you associate a subnet with this custom NACL, now any instance in this subnet will start following NACL rules
+	iii) NACLs are stateless unlike security groups. Security groups are statefull ,if you add an inbound rule say for port 80, it is automatically allowed out, meaning outbound rule for that particular port need not be explicitly added. 
+    But in NACLs you need to provide explicit inbound and outbound rules
+	iv) In security groups you cannot deny traffic from a particular instance, by default everything is denied. You can set rules only to allow. Where as in NACLs you can set rules both to deny and allow. There by denying and allowing only the instances 
+    of your choice. You get to take more granular decisions.
+	v) Security groups evaluate all the rules in them before allowing a traffic . NACLs do it in the number order, from top to bottom like, if your rule #0 says allow all HTTP traffic and your rule #100 says don't allow HTTP traffic from ip address 10.0.2.156 , 
+	it's will not be able to deny the traffic, because rule #0 has already allowed traffic. So it's good practice to have your deny rules first in NACL and followed by allow rules. AWS best practice is to number your rules in increment of 100s in NACL. 
+	By deny rules first I mean, specifying narrow deny rules, like for specific ports only. And then write your allow rules.
+   
+   
+5) To create an IAM policy : iam_policy.json
+
+Choose JSON
+
+{
+	  "Version": "2012-10-17",
+	  "Statement": [
+	    {	
+	      "Effect": "Allow",
+	      "Action": [ "dynamodb:PutItem" ],
+	      "Resource": [ "*" ]
+	    },
+	    {
+	      "Effect": "Allow",
+	      "Action": [ "sns:Publish" ],
+	      "Resource": [ "*" ]
+	    }
+	  ]
+	}
+
+
+CREATE TABLE : app_config.json
+
+{ 
+	  "AWS_REGION": " gsg-signup-table",
+	  "STARTUP_SIGNUP_TABLE": " us-west-2",
+	  "NEW_SIGNUP_TOPIC": " arn:aws:sns:us-west-2:221705683770:gsg-signup-notifications"
+	}
+
+
+   
+   
+ -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ EC2:
+ 
+ Elastic Compute Cloud(EC2)
+
+	Amazon EC2 is a web service that provides resizable computing capacity—literally, servers in Amazon's data centers—that you use to build and host your software systems
+	It is Infrastructure-as-a-service
+	It is also know as Virtual Machine in the Cloud
+	It is pay-per-use scalable platform for VMs in Cloud
+	It is support Windows / Linux instances
+	Amazon Machine Image(AMI) refers to virtual disk template
+
+EC2 Instance Types
+	General Purpose
+		General purpose instances provide a balance of compute, memory, and network resources, and are a good choice for many applications. 
+		They are recommended for small and medium databases, data processing tasks that require additional memory for running backend servers for SAP, Microsoft SharePoint, and other enterprise applications
+
+	Compute Optimized
+		Compute optimized instances have a higher ratio of vCPUs to memory than other families, and the lowest cost per vCPU among all Amazon EC2 instance types. 
+		Examples of such applications include high traffic front end fleets, on-demand batch processing, distributed analytics, web servers, batch processing, and high performance science and engineering applications
+
+	GPU Instances
+		GPU graphics instances provide GPUs along with high CPU performance, large memory and high network speed for applications requiring high-performance graphics acceleration, such as 3D visualizations and graphics-intensive remote workstation.
+
+	Memory Optimized
+		Memory optimized instances have the lowest cost per GB of RAM among Amazon EC2 instance types. We recommend memory optimized instances for many database applications, for memcached and other distributed caches, and larger deployments of enterprise applications like SAP and Microsoft SharePoint
+
+	Storage Optimized
+		Storage optimized instances provides you with direct-attached storage options optimized for applications with specific disk I/O and storage capacity requirements. We recommend I2 instances for NoSQL databases which benefit from very high random I/O performance, and low request latency of direct-attached SSDs. We recommend D2 instances for running large-scale data warehouse or parallel file systems
+ 
+ 
+ EC2 Features:
+ 
+1) Virtual computing environments, known as instances
+2) Preconfigured templates for your instances, known as Amazon Machine Images (AMIs), that package the bits you need for your server (including the operating system and additional software)
+3) Various configurations of CPU, memory, storage, and networking capacity for your instances, known as instance types
+4) Secure login information for your instances using key pairs (AWS stores the public key, and you store the private key in a secure place)
+5) Storage volumes for temporary data that's deleted when you stop or terminate your instance, known as instance store volumes
+6) Persistent storage volumes for your data using Amazon Elastic Block Store (Amazon EBS), known as Amazon EBS volumes	`
+7) Multiple physical locations for your resources, such as instances and Amazon EBS volumes, known as regions and Availability Zones
+8) A firewall that enables you to specify the protocols, ports, and source IP ranges that can reach your instances using security groups
+9) Static IPv4 addresses for dynamic cloud computing, known as Elastic IP addresses
+10) Metadata, known as tags, that you can create and assign to your Amazon EC2 resources
+
+Virtual networks you can create that are logically isolated from the rest of the AWS cloud, and that you can optionally connect to your own network, known as virtual private clouds (VPCs)
+ 
+ 
+ 
+ -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+ 
+ S3:
+ 
+ Amazon S3 has a simple web services interface that you can use to store and retrieve any amount of data, at any time, from anywhere on the web. It gives any developer access to the same highly scalable, reliable, fast, inexpensive data storage 
+ infrastructure that Amazon uses to run its own global network of web sites.
+
+1) Have you ever created S3 policies?
+
+ bucket policies for hosting static websites on the amazon web services S3 and bicket policies for archival like life cycle rules.
+ 
+28) How do you findout effective set of policies?
+ policy simulator but i think you can do some actions on the bucket like read folders, find out definal authorization like you can also get delete, put, download objects  actions that will will tell you want authorizations you have ont he bucket policy.
+ 
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EBS:
+
+Amazon Elastic Block Store (Amazon EBS) provides persistent block storage volumes for use with Amazon EC2 instances in the AWS Cloud. Each Amazon EBS volume is automatically replicated within its Availability Zone to protect you from component failure, 
+offering high availability and durability.
+
+1) Performance Issue:
+
+I want to make sure that I get optimal performance from my Amazon Elastic Block Store (Amazon EBS) volumes. How do I do that?
+
+Resolution:
+
+Make sure that your Amazon Elastic Compute Cloud (Amazon EC2) instance is a type that can be optimized for use with Amazon EBS. An EBS-optimized EC2 instance provides dedicated network throughput for volumes. For a description of the instance types, see Amazon EC2 Instance Configuration.
+Improve the performance of Amazon EBS volumes by doing the following:
+For best practices and performance tuning, see Amazon EBS Volume Performance.
+Initialize EBS volumes restored from a snapshot before you use them.
+Use AWS Trusted Advisor to get a list of best practices that you can use to improve the performance of your Amazon EBS volumes. For more information, see Performance.
+
+
+2) How do I back up an instance store volume on my Amazon EC2 instance to Amazon EBS?
+
+I want to prepare a backup of the instance store volume on my Amazon Elastic Compute Cloud (Amazon EC2) instance by creating an Amazon Elastic Block Store (Amazon EBS) volume. How do I do that?
+
+Resolution
+Creating a new EBS volume and migrating your data
+Create an EBS volume. Be sure to select a size large enough to hold the data that you’re migrating.
+Attach the EBS volume to your instance.
+Make the volume available to your operating system, and then create a compatible file system on the volume. For Linux instances, see Making the Volume Available on Linux. For Windows instances, see Making the Volume Available on Windows.
+Copy the data using the disk management or migration tool you prefer for your operating system, such as rsync for Linux or robocopy for Windows.
+Note: Keep both volumes available until you’re sure that the copy operation is successful and completed. You might need to perform additional configuration before the new EBS volumes are usable with your instance.
+
+3) How do you improve EBS volume performance?
+
+Using EBS-optimized Elastic Compute Cloud (EC2) instances is another step to improve performance. Optimized EC2 instances provide dedicated throughput and minimize traffic contention between the workload and any EBS storage volume type. 
+This allows the workload to take full advantage of the IOPS available from an EBS volume. Users can select EBS-optimized EC2 instances with dedicated throughput from 500 to 4,000 Mbps, allowing users to balance EBS performance and cost.
+
+Another option is to combine multiple EBS volumes in a RAID 0 (striped volume) configuration. Multiple EBS instances share the I/O load in this approach, improving storage performance above levels that might be possible for single EBS volumes. 
+RAID 0 configurations can be applied to all four EBS volume types.
+
+Finally, consider various other factors that affect storage performance. For example, small, random I/O activity can degrade HDD performance. Applications that use such I/O patterns can benefit from a solid-state GP2 EBS instance. 
+Conversely, read-heavy workloads that rely on large, sequential I/O might benefit from configuring a larger read-ahead buffer for the EBS instance. Inconsistent I/O requests might upset HDD storage performance, 
+so monitoring tools can determine how variable the wait is for storage access. Latency can also be a problem when accessing data from an EBS volume restored from a snapshot, so initialize the restored volume to avoid this. 
+This can be done by accessing each block before using the volume in production.
+
+
+
+
+
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Amazon CLI:
+
+1) Have you ever used or provisioning through AMzon CLI?
+
+yes, we have used the amazon CLI from the jenkins server and the main reason for using that is for machines switchoff , creating snapshots like running snapshots, no reboot snapshots and backupon daily basis especially on critical situation. 
+
+2) how to troubleshoot/approach when services are not responding?
+
+AWS CLI commands:
+
+
+VPC create:
+  aws ec2 create-vpc --cidr-block 10.0.0.0/16
+  aws ec2 create-vpc --cidr-block 10.0.0.0/16 --instance-tenancy dedicated
+  
+Subnet create:
+
+aws ec2 create-subnet --vpc-id vpc-a01106c2 --cidr-block 10.0.1.0/24
+
+Delete vpc:
+
+aws ec2 delete-vpc --vpc-id vpc-a01106c2
+
+start/stop EC2 instance:
+aws ec2 start-instances --instance-ids i-1234567890abcdef0
+aws ec2 stop-instances --instance-ids i-1234567890abcdef0
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Cloud Watch/Cloud Trial/Cloud Computing:
+
+
+1) HAve you ever used cloud watch and cloud trail?
+
+ CloudWatch is a monitoring service for AWS cloud resources and the applications you run on AWS cloud. watch enables monitoring for ec2 and other Amazon cloud services. ... AWS cloud watch allows. 
+ you to record metrics for services such as EBS ec2 elastic load balancer and Amazon s3 and using these metrics.
+
+CloudTrail is an application program interface (API) call-recording and log-monitoring Web service offered by Amazon Web Services (AWS). AWS CloudTrail allows AWS customers to record API calls, sending log files to Amazon S3 buckets for storage.
+
+2) What is cloud computing ?
+
+	Cloud computing means the use of remote servers on the internet to store, manage and process data rather than a local servers.   
+															OR
+    Cloud computing is the on-demand delivery of compute power, database storage, applications, and other IT resources through a cloud services platform via the internet with pay-as-you-go pricing.
+															OR
+    A Model for enabling ubiquitous, convenient, on-demand network access to shared pool of configurable computing resources(e.g. networks, servers, storage, application and services) that can be rapidly provisioned and released with minimal management effort or service provider interaction.
+
+
+Cloud Computing facilitates
+
+	Quick access to cost-efficient and flexible IT resources
+	Accessing servers, databases, storage media, and  a variety of application services on the World Wide Web
+	
+3) What are the different models in cloud computing?
+
+	Service Models:
+		Iaas(Infrastructure as a Service)
+			Infrastructure as a Service, sometimes abbreviated as IaaS, contains the basic building blocks for cloud IT and typically provide access to networking features, computers (virtual or on dedicated hardware), and data storage space. Infrastructure as a Service provides you with the highest level of flexibility and management control over your IT resources and is most similar to existing IT resources that many IT departments and developers are familiar with today. 
+			It is also know as Hardware as a Service  (Source AWS)
+			
+			For Example AWS(Amazon Web Services) is IaaS, like AWS EC2
+			
+		PaaS(Platform as a Service)
+			Platforms as a service remove the need for organizations to manage the underlying infrastructure (usually hardware and operating systems) and allow you to focus on the deployment and management of your applications. This helps you be more efficient as you don’t need to worry about resource procurement, capacity planning, software maintenance, patching, or any of the other undifferentiated heavy lifting involved in running your application.
+			
+			For Example: This service would make sense to you only if you are a developer, since this service provides you a platform for developing applications, like Google App Engine.
+
+		
+		SaaS(Software as a Service)
+			Software as a Service provides you with a completed product that is run and managed by the service provider. In most cases, people referring to Software as a Service are referring to end-user applications. With a SaaS offering you do not have to think about how the service is maintained or how the underlying infrastructure is managed; you only need to think about how you will use that particular piece software. A common example of a SaaS application is web-based email where you can send and receive email without having to manage feature additions to the email product or maintaining the servers and operating systems that the email program is running on.    				
+
+			For Example: salesforce.com provides the CRM(Customer Relation Manager) on a cloud infrastructure to its client and charges them for it, but the software is owned by the salesforce company only.
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+RDS:
+
+	RDS is AWS provisioned database service, commonly used for things like storing customer information and catalog invenroty.
+
+1) what is the process required for migrating from traditional database into RDS or Aurora, what are the key steps to migrate onpremise SQL server to RDS or Aurora?
+
+ i) Map the various machine sizes, will take the machine size of the mysql onpremise and look for the corresponding RDS machine size.
+ ii) Use data migration service which lets you migrate the data or take dumps if you are not using data migration service and migrate the dumps to cloud by Configure master-slave interactions on the cloud.
+ iii) Test the application - WIll make sure application is talking to database 
+
+2) Two different options for launching your RDS instance:
+
+		Launch with elastic beanstalk
+			When you terminate the elastic beanstalk environment the database will also be terminated.
+			Quick and easy to add your databases and get started 
+			It's really only suitable for Dev and test environments only 
+			
+		Launch outside of elastic beanstalk
+			Additional configuration steps required  - you are going to need to add a security group and connection information so the 
+			it's suitable for production environments, and gives you a lot more flexibility and it means that if you terminate a Elastic beanstalk environment you know your production instance will not be terminated.
+			Allows connections from multiple environments, you can tear down the application stack without impacting the database.
+
+
+RDS database engines are Amazon Aurora, MySQl, Postgres SQL, Oracle, Microfost SQL server 
+DynamoDB can replace  MongoDB, CassandraDB, Oracle No SQL.
+
+SQL v/s NoSQL Differences:
+
+SQL vs NoSQL: High-Level Differences. SQL databases are primarily called as Relational Databases (RDBMS)that is based on tabular design; whereas NoSQL database are primarily called as non-relational or distributed database in nature with its document-based design. 
+SQL databases have predefined schema whereas NoSQL databases have dynamic schema for unstructured data. NoSQL supported by column oriented databases where RDBMS is row oriented database. NoSQL seems to work better on both unstructured and unrelated data.
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Lambda/API gateway:
+
+Lambda functions
+
+AWS Lambda is a compute service where you can upload your code to AWS Lambda and the service can run the code on your behalf using AWS infrastructure.
+
+1. Steps  to a function in node.js
+•	Compute – lambda – select blueprint  - trigger – configure function ( 3 ways : code inline ;  upload .zip file ; upload from amazon S3) 
+
+•	Provide the handler , roles and policy template (permissions) 
+
+•	Advanced settings : memory to the function , this is used by the function and also the amazon services that are going run
+
+•	You can run and monitor know the details of how much time it took and how much memeory used
+
+
+2. connecting Lambda to a API gateway :
+
+From LAMBDA :   Compute – lambda – select blueprint  - trigger – and  select API gateway -  provide the name , resource ; method, deployment stage(prod) ; security (IAM/open) – submit
+
+API gateway is created with get method/url and resource  ---- > the function has a web page
+
+
+Hook from FROM API GATEWAY: 
+
+Create new – provide the name , crete new resource , create new method and now chose integration type - > select lambda – chose region – name of the function - > and the req is created ( method request -> integration – req – integration resp -> method resp )   then give the deployment stage (prod)  
+
+Passing information through API Gateway 
+
+Go to Api gateway that is created and go to method and add mapping template ( update with the steps ) 
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+AWS Elastic Beanstalk:
+
+	It allows you to deploy and scales your web application including the web server platform where required. 
+	It supports a widely used programming languages - Java PHP, Python, Ruby go, Docker, .Net and Node.js as well as application server platforms like Tomcat, passenger, Puma and IIS etc..
+	Provisions the underlying resources for you can fully manage the EC2 instances your self or elastic beanstalk can take full admistrative control Updates, monitoring, metrics, and health all included.
+	
+Deplayment Approaches:
+	All at Once:
+		This is where basically you have a service interruption while you go update the entire environment at once
+		To roll back, perform a further all at All at once upgrade (Ex: this is probably a good fit test and Dev)
+	
+	Rolling:
+		Reduce capacity during the deployment
+		To roll back, perform a further rolling update
+		
+	Rolling with Additional batch:
+		Maintains full capacity
+		To roll back, perform a further rolling update
+
+	immutable:
+		This is the best option for mission critical production systems.
+		It allows you to maintain full capacity.
+		To roll back, You just need to delete the new instances and auto scaling group in terms of advance Elastic beanstalk.
+
+	You can customize your elastic beanstalk environment by adding configuration files.
+	These files are written in YAML or in Jason.
+	They can have the .Config extension.
+	The .Config files are saved to the .ebextensions folder
+	Your ebextensions folder must be located in the top level directory of your application source code bundle.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+ELK:
+
+What it does?
+-Filter Logs (Logstash)
+-Accumulate Logs (ElasticSearch)
+-View Logs (Kibana)
+
+Components of ELK Stack-
+
+- Elasticsearch -> Storing logs, Flat DB
+- Logstash -> Collect from Filebeat, Parsing (Read & Understanding) & Filter
+- Kibana -> View logs
+
++ Filebeat Client
+- Sends log to ELK server
+
+Advantages:
+-	Real time data and real time analytics
+-	Scalable, high availability, multi-tenant
+-	Full text search
+-	Centralized aggregation (collecting data)
+
+The ELK stack consists of Elasticsearch, Logstash, and Kibana. 
+Data constantly flows into your systems, but it can quickly grow to be fat and stale. As your data set grows larger, your analytics will slow up, resulting in sluggish insights. And this is likely to be a serious business problem. The solution is ELK.
+
+Advantages of ELK
+● Real-time data and real-time analytics
+● Scalable, high-availability, multi-tenant.
+● Full text search
+● Centralised Aggregation
+
+
+- Understand Manual Installation Steps
+
+- Install Using Ansible:
+
+ansible-playbook -i hosts install/elk.yml --ask-pass
+ansible-playbook -i hosts install/elk-client.yml --extra-vars 'elk_server=192.168.1.105' --ask-pass
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Amazon EMR:
+
+What Is Amazon EMR?
+
+Amazon EMR is a managed cluster platform that simplifies running big data frameworks, such as Apache Hadoop and Apache Spark, on AWS to process and analyze vast amounts of data. 
+By using these frameworks and related open-source projects, such as Apache Hive and Apache Pig, you can process data for analytics purposes and business intelligence workloads. 
+Additionally, you can use Amazon EMR to transform and move large amounts of data into and out of other AWS data stores and databases, such as Amazon Simple Storage Service (Amazon S3) 
+and Amazon DynamoDB.
+
+Understanding Clusters and Nodes
+The central component of Amazon EMR is the cluster. A cluster is a collection of Amazon Elastic Compute Cloud (Amazon EC2) instances. 
+Each instance in the cluster is called a node. Each node has a role within the cluster, referred to as the node type. 
+Amazon EMR also installs different software components on each node type, giving each node a role in a distributed application like Apache Hadoop.
+
+The node types in Amazon EMR are as follows:
+
+Master node: A node that manages the cluster by running software components to coordinate the distribution of data and tasks among other nodes for processing. 
+The master node tracks the status of tasks and monitors the health of the cluster. Every cluster has a master node, and it's possible to create a single-node cluster 
+with only the master node.
+
+Core node: A node with software components that run tasks and store data in the Hadoop Distributed File System (HDFS) on your cluster. Multi-node clusters have at least one core node.
+
+Task node: A node with software components that only runs tasks and does not store data in HDFS. Task nodes are optional.
+
+
+Understanding the Cluster Lifecycle:
+
+A successful Amazon EMR cluster follows this process:
+
+1) Amazon EMR first provisions EC2 instances in the cluster for each instance according to your specifications. For more information, see Configure Cluster Hardware and Networking. 
+For all instances, Amazon EMR uses the default AMI for Amazon EMR or a custom Amazon Linux AMI that you specify. For more information, see Using a Custom AMI. During this phase, 
+the cluster state is STARTING.
+2) Amazon EMR runs bootstrap actions that you specify on each instance. You can use bootstrap actions to install custom applications and perform customizations that you require. 
+For more information, see Create Bootstrap Actions to Install Additional Software. During this phase, the cluster state is BOOTSTRAPPING.
+3) Amazon EMR installs the native applications that you specify when you create the cluster, such as Hive, Hadoop, Spark, and so on.
+4) After bootstrap actions are successfully completed and native applications are installed, the cluster state is RUNNING. At this point, you can connect to cluster instances, 
+and the cluster sequentially runs any steps that you specified when you created the cluster. You can submit additional steps, which run after any previous steps complete. 
+For more information, see Work with Steps Using the CLI and Console.
+5) After steps run successfully, the cluster goes into a WAITING state. If a cluster is configured to auto-terminate after the last step is complete, 
+it goes into a SHUTTING_DOWN state.
+6) After all instances are terminated, the cluster goes into the COMPLETED state.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Elastic Network Interfaces (ENI) :
+
+An elastic network interface (referred to as a network interface in this documentation) is a logical networking component in a VPC that represents a virtual network card.
+
+You can create a network interface, attach it to an instance, detach it from an instance, and attach it to another instance. The attributes of a network interface follow it as it's attached or detached from an instance and reattached to another instance. 
+When you move a network interface from one instance to another, network traffic is redirected to the new instance.
+
+Public IPv4 addresses for network interfaces
+IPv6 addresses for network interfaces 
+
+Monitoring IP Traffic
+
+You can enable a VPC flow log on your network interface to capture information about the IP traffic going to and from a network interface. After you've created a flow log, you can view and retrieve its data in Amazon CloudWatch Logs. 
+
+Network Interfaces Configuration
+
+1) You can attach a network interface to an instance when it's running (hot attach), when it's stopped (warm attach), or when the instance is being launched (cold attach).
+2) You can detach secondary (ethN) network interfaces when the instance is running or stopped. However, you can't detach the primary (eth0) interface.
+3) If you have multiple subnets in an Availability Zone for the same VPC, you can move a network interface from an instance in one of these subnets to an instance in another one of these subnets.
+4) When launching an instance from the CLI or API, you can specify the network interfaces to attach to the instance for both the primary (eth0) and additional network interfaces.
+5) Launching an Amazon Linux or Windows Server instance with multiple network interfaces automatically configures interfaces, private IPv4 addresses, and route tables on the operating system of the instance.
+6) A warm or hot attach of an additional network interface may require you to manually bring up the second interface, configure the private IPv4 address, and modify the route table accordingly. Instances running Amazon Linux or Windows Server automatically recognize the warm or hot attach and configure themselves.
+7) Attaching another network interface to an instance (for example, a NIC teaming configuration) cannot be used as a method to increase or double the network bandwidth to or from the dual-homed instance.
+8) If you attach two or more network interfaces from the same subnet to an instance, you may encounter networking issues such as asymmetric routing. If possible, use a secondary private IPv4 address on the primary network interface instead. For more information, see Assigning a Secondary Private IPv4 Address.
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+AWS scripts:
+
+
+Launch AWS EC2 Instance:
+
+
+provider "aws" {
+ access_key=""
+ secret_key=""
+ region="us-east-1"
+}
+resource "aws_instance" "myfirstec2"{
+ami= "ami_b70554c8"
+instance_type="t2.micro"
+tag{
+ name="dowithpythontech"
+}
+}
+
+Loop to create multiple EC2 instances:
+
+provider "aws" {
+ region = "ap-south-1"
+}
+resource "aws_instance"
+"example" {
+ count = 3
+ ami = "ami-4fc58420"
+ instance_type = "t2.micro"
+ tags {
+  Name = "${var.instance_name}-${count.index+1}" //Interpolation Syntax
+ }
+}
+
+
+resource "aws_s3_bucket" "myfirstbucket"{
+bucket="dowithpythonbucket"
+acl="private"
+tag{
+name="for python technologies"
+}
+}
+
+variable "x"{
+default="2"
+}
+
+output "xo"{
+ value="${var.x}"
+}
+
+by default terrafom take variable as string 
+
+variable "myname"{
+type="string"
+default="terraform"
+}
+
+
+Script for AWS VPC setup:
+
+#========================== nat-gateway ======================
+# create a EIP, to associate it to NAT gateway
+resource "aws_eip" "nat_eip" {
+  vpc = true
+}
+
+resource "aws_nat_gateway" "nat_gateway" {
+  allocation_id = "${aws_eip.nat_eip.id}"
+  subnet_id = "${var.public_subnet_id}"
+}
+
+#========================== nat-builds private subnet ======================
+resource "aws_subnet" "nat_builds" {
+  vpc_id = "${var.vpc_id}"
+  cidr_block = "${var.cidr_private_nat_builds}"
+  availability_zone = "${var.avl_zone}"
+  tags {
+    Name = "nat_builds_${var.install_version}"
+  }
+}
+
+# Routing table for nat-builds private subnet
+resource "aws_route_table" "rt_nat_builds" {
+  vpc_id = "${var.vpc_id}"
+  route {
+    cidr_block = "0.0.0.0/0"
+    nat_gateway_id = "${aws_nat_gateway.nat_gateway.id}"
+  }
+  tags {
+    Name = "rt_nat_builds_${var.install_version}"
+  }
+}
+
+# Associate the routing table to nat-builds private subnet
+resource "aws_route_table_association" "rt_assn_nat_builds" {
+  subnet_id = "${aws_subnet.nat_builds.id}"
+  route_table_id = "${aws_route_table.rt_nat_builds.id}"
+}
+
+# Outputs
+output "nat_public_ip" {
+ value = "${aws_eip.nat_eip.public_ip}"
+}
+
+output "nat_builds_private_subnetId" {
+ value = "${aws_subnet.nat_builds.id}"
+}
